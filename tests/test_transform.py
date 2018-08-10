@@ -91,7 +91,6 @@ def test_make_hotel_nodes(mock_hotel_root, mock_hotel_row):
     hotel = etree.SubElement(mock_hotel_root, "hotel")
     expected = b"<hotels>\n  <hotel>\n    <address>Stretto Bernardi 004, Quarto Mietta nell'emilia, 07958 Torino (OG)</address>\n    <contact>Rosalino Marchetti</contact>\n    <name>Martini Cattaneo</name>\n    <phone>+39 627 68225719</phone>\n    <stars>5</stars>\n    <uri>http://www.farina.org/blog/categories/tags/about.html</uri>\n  </hotel>\n</hotels>\n"  # pylint: disable=line-too-long
     make_hotel_nodes(hotel, **mock_hotel_row)
-    # print(etree.tostring(mock_hotel_root, pretty_print=True))
     assert etree.tostring(mock_hotel_root, pretty_print=True) == expected
 
 
@@ -99,5 +98,4 @@ def test_make_xml_document(mock_hotel_rows):
     """It returns the expected xml given a list of OrderedDicts"""
     expected = b"<hotels>\n  <hotel>\n    <address>Stretto Bernardi 004, Quarto Mietta nell'emilia, 07958 Torino (OG)</address>\n    <contact>Rosalino Marchetti</contact>\n    <name>Martini Cattaneo</name>\n    <phone>+39 627 68225719</phone>\n    <stars>5</stars>\n    <uri>http://www.farina.org/blog/categories/tags/about.html</uri>\n  </hotel>\n  <hotel>\n    <address>Bolzmannweg 451, 05116 Hannover</address>\n    <contact>Scarlet Kusch-Linke</contact>\n    <name>Apartment D&#246;rr</name>\n    <phone>08177354570</phone>\n    <stars>1</stars>\n    <uri>http://www.garden.com/list/home.html</uri>\n  </hotel>\n</hotels>\n"  # pylint: disable=line-too-long
     root = make_xml_document(mock_hotel_rows, collection='hotels')
-    # root.write('tests.xml', encoding='utf-8')
     assert etree.tostring(root, pretty_print=True) == expected

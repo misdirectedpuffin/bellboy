@@ -104,10 +104,7 @@ def make_xml_document(rows, collection='hotels'):
     <hotel>
         <address>63847 Lowe Knoll, East Maxine, WA 97030-4876</address>
         <contact>Dr. Sinda Wyman</contact>
-        <name>The Gibson</name>
-        <phone>1-270-665-9933x1626</phone>
-        <stars>5</stars>
-        <uri>http://www.paucek.com/search.htm</uri>
+        ...
     </hotel>
     """
     root = etree.Element(collection)
@@ -117,9 +114,18 @@ def make_xml_document(rows, collection='hotels'):
     return root
 
 
+def make_xml_file(path, rows, collection='hotels'):
+    """Write a valid XML document."""
+    root = make_xml_document(rows, collection=collection)
+    tree = etree.ElementTree(root)
+    tree.write(path, xml_declaration=True, encoding='UTF-8', pretty_print=True)
+
+
 def file_output_factory(output):
+    """Provide the correct output format function."""
     return {
         'json': make_json_file,
+        'xml': make_xml_file,
     }.get(output)
 
 
@@ -127,7 +133,7 @@ if __name__ == '__main__':
     directory = os.path.dirname(os.path.realpath(__file__))
     data = load(os.path.join(directory, '../data/hotels.csv'))
     rows = list(filter(is_valid_row, data))
-    output_format = 'json'
+    output_format = 'xml'
     outfile = 'hotel'
     output_func = file_output_factory(output_format)
     filename = '.'.join([outfile, output_format])
