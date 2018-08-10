@@ -3,7 +3,8 @@ import os
 import sys
 import click
 
-from trivago.transform import load, is_valid_row, file_output_factory
+from trivago.transform import load, Row
+from trivago.export import JsonExport, XmlExport
 
 
 def get_current_directory():

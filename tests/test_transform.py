@@ -3,11 +3,8 @@ import os
 from collections import OrderedDict
 
 import pytest
-from lxml import etree
 
-from trivago.transform import (has_valid_rating, is_valid_row, load,
-                               make_hotel_nodes, make_xml_document,
-                               normalise_stars)
+from trivago.transform import Row, load
 
 
 def test_load(tmpdir):
@@ -42,60 +39,45 @@ def test_load(tmpdir):
     ]
 
 
-@pytest.mark.parametrize('rating, expected', [
-    ('-1', False),
-    ('0', True),
-    ('1', True),
-    ('5', True),
-    ('6', False),
+@pytest.mark.parametrize('mock_row, expected', [
+    (Row(OrderedDict([('stars', '-1')])), False),
+    (Row(OrderedDict([('stars', '0')])), True),
+    (Row(OrderedDict([('stars', '1')])), True),
+    (Row(OrderedDict([('stars', '5')])), True),
+    (Row(OrderedDict([('stars', '6')])), False)
 ])
-def test_has_valid_rating(rating, expected):
+def test_has_valid_rating(mock_row, expected):
     """It returns the expected bool, given a rating."""
-    assert has_valid_rating(rating) == expected
+    assert mock_row.has_valid_rating() == expected
 
 
-@pytest.mark.parametrize('row, expected', [
-    (OrderedDict([('stars', '0')]), '0'),
-    (OrderedDict([('stars', '-1')]), '0'),
-    (OrderedDict([('stars', '6')]), '0'),
-    (OrderedDict([('stars', '-0')]), '0'),
+@pytest.mark.parametrize('mock_row, expected', [
+    (Row(OrderedDict([('stars', '0')])), '0'),
+    (Row(OrderedDict([('stars', '-1')])), '0'),
+    (Row(OrderedDict([('stars', '6')])), '0'),
+    (Row(OrderedDict([('stars', '-0')])), '0'),
 ])
-def test_normalise_stars(row, expected):
+def test_normalise_stars(mock_row, expected):
     """It returns a normalised star rating given a row."""
-    assert normalise_stars(row) == expected
+    assert mock_row.normalise_stars() == expected
 
 
-@pytest.mark.parametrize('row, expected', [
+@pytest.mark.parametrize('mock_row, expected', [
     (
-        OrderedDict([
+        Row(OrderedDict([
             ('name', 'somehotel'),
             ('uri', 'https://in.hotel.com/')
-        ]),
+        ])),
         True
     ),
     (
-        OrderedDict([
+        Row(OrderedDict([
             ('name', 'somehotel'),
             ('uri', 'ftp://in.hotel.com/')
-        ]),
+        ])),
         False
     )
 ])
-def test_is_valid_row(row, expected):
+def test_is_valid_row(mock_row, expected):
     """It returns the expected bool given a row."""
-    assert is_valid_row(row) == expected
-
-
-def test_make_hotel_nodes(mock_hotel_root, mock_hotel_row):
-    """It returns the expected xml given the parent element."""
-    hotel = etree.SubElement(mock_hotel_root, "hotel")
-    expected = b"<hotels>\n  <hotel>\n    <address>Stretto Bernardi 004, Quarto Mietta nell'emilia, 07958 Torino (OG)</address>\n    <contact>Rosalino Marchetti</contact>\n    <name>Martini Cattaneo</name>\n    <phone>+39 627 68225719</phone>\n    <stars>5</stars>\n    <uri>http://www.farina.org/blog/categories/tags/about.html</uri>\n  </hotel>\n</hotels>\n"  # pylint: disable=line-too-long
-    make_hotel_nodes(hotel, **mock_hotel_row)
-    assert etree.tostring(mock_hotel_root, pretty_print=True) == expected
-
-
-def test_make_xml_document(mock_hotel_rows):
-    """It returns the expected xml given a list of OrderedDicts"""
-    expected = b"<hotels>\n  <hotel>\n    <address>Stretto Bernardi 004, Quarto Mietta nell'emilia, 07958 Torino (OG)</address>\n    <contact>Rosalino Marchetti</contact>\n    <name>Martini Cattaneo</name>\n    <phone>+39 627 68225719</phone>\n    <stars>5</stars>\n    <uri>http://www.farina.org/blog/categories/tags/about.html</uri>\n  </hotel>\n  <hotel>\n    <address>Bolzmannweg 451, 05116 Hannover</address>\n    <contact>Scarlet Kusch-Linke</contact>\n    <name>Apartment D&#246;rr</name>\n    <phone>08177354570</phone>\n    <stars>1</stars>\n    <uri>http://www.garden.com/list/home.html</uri>\n  </hotel>\n</hotels>\n"  # pylint: disable=line-too-long
-    root = make_xml_document(mock_hotel_rows, collection='hotels')
-    assert etree.tostring(root, pretty_print=True) == expected
+    assert mock_row.is_valid() == expected
