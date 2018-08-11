@@ -31,6 +31,7 @@ def mock_hotel_row():
         ]
     ))
 
+
 @pytest.fixture(scope='module')
 def mock_hotel_rows():
     """Make two rows as returned by the csv parser."""
@@ -46,7 +47,10 @@ def mock_hotel_rows():
                 ("name", "Martini Cattaneo"),
                 ("phone", "+39 627 68225719"),
                 ("stars", "5"),
-                ("uri", "http://www.farina.org/blog/categories/tags/about.html"),
+                ("uri", (
+                    "http://"
+                    "www.farina.org/blog/categories/tags/about.html"
+                ))
             ]
         )),
         Row(OrderedDict(

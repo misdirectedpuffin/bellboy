@@ -30,8 +30,16 @@ def entrypoint():
 @click.option('--write', is_flag=True, default=False)
 @click.option('--outfile', default='hotels')
 @click.option('--infile', default='hotels.csv')
-@click.option('--data-dir', type=click.Path(exists=True), callback=output_directory)
-@click.option('--output-format', type=click.Choice(['json', 'xml']), default='json')
+@click.option(
+    '--data-dir',
+    type=click.Path(exists=True),
+    callback=output_directory
+)
+@click.option(
+    '--output-format',
+    type=click.Choice(['json', 'xml']),
+    default='json'
+)
 def parse(output_format, data_dir, infile, outfile, write):
     """Parse the csv"""
     data = load(os.path.join(data_dir, infile))
