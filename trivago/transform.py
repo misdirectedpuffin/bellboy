@@ -2,11 +2,14 @@
 import csv
 import os
 
+from collections import OrderedDict
 
-class Row(object):
 
-    def __init__(self, row):
-        self.row = row
+class Row(OrderedDict):
+
+    def __init__(self, *args, **kwargs):
+        super(Row, self).__init__(*args, **kwargs)
+        self.row = args[0]
         self._stars = None
         self._uri = None
         self._name = None
@@ -72,11 +75,11 @@ class Row(object):
 
 
 def load(path, delimiter=','):
-    """Return csv rows as dicts."""
+    """Return csv rows as OrderedDicts."""
     with open(path, 'r') as data:
         reader = csv.DictReader(
             data,
             delimiter=delimiter
         )
         for row in reader:
-            yield row
+            yield Row(row)

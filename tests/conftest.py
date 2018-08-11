@@ -4,6 +4,8 @@ from collections import OrderedDict
 import pytest
 from lxml import etree
 
+from trivago.transform import Row
+
 
 @pytest.fixture(scope='module')
 def mock_hotel_root():
@@ -14,7 +16,7 @@ def mock_hotel_root():
 @pytest.fixture
 def mock_hotel_row():
     """Make a single row as returned by the csv parser."""
-    return OrderedDict(
+    return Row(OrderedDict(
         [
             ("address", (
                 "Stretto Bernardi 004,"
@@ -27,13 +29,13 @@ def mock_hotel_row():
             ("stars", "5"),
             ("uri", "http://www.farina.org/blog/categories/tags/about.html")
         ]
-    )
+    ))
 
 @pytest.fixture(scope='module')
 def mock_hotel_rows():
     """Make two rows as returned by the csv parser."""
     return [
-        OrderedDict(
+        Row(OrderedDict(
             [
                 ("address", (
                     "Stretto Bernardi 004,"
@@ -46,8 +48,8 @@ def mock_hotel_rows():
                 ("stars", "5"),
                 ("uri", "http://www.farina.org/blog/categories/tags/about.html"),
             ]
-        ),
-        OrderedDict(
+        )),
+        Row(OrderedDict(
             [
                 ("address", "Bolzmannweg 451, 05116 Hannover"),
                 ("contact", "Scarlet Kusch-Linke"),
@@ -56,4 +58,4 @@ def mock_hotel_rows():
                 ("stars", "1"),
                 ("uri", "http://www.garden.com/list/home.html")
             ]
-        )]
+        ))]
