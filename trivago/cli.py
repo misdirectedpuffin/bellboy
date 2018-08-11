@@ -9,10 +9,12 @@ from trivago.transform import Row, load
 
 
 def get_current_directory():
+    """Make path to directory containing current file."""
     return os.path.dirname(os.path.realpath(__file__))
 
 
 def output_directory(ctx, param, value):
+    """Make path to data directory."""
     return os.path.join(get_current_directory(), '..', 'data')
 
 

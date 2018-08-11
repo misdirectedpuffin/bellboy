@@ -81,3 +81,23 @@ def test_normalise_stars(mock_row, expected):
 def test_is_valid_row(mock_row, expected):
     """It returns the expected bool given a row."""
     assert mock_row.is_valid() == expected
+
+
+def test_make_code_points():
+    """It returns the expected ord value of a character."""
+    row = Row(OrderedDict([('name', 'test-name')]))
+    assert list(row._make_code_points()) == [
+        116, 101, 115, 116, 45, 110, 97, 109, 101
+    ]
+
+
+def test_has_valid_name_false():
+    """It returns False given an invalid string."""
+    row = Row(OrderedDict([('name', 'Apartment Dörr')]))
+    assert not row.has_valid_name()
+
+
+def test_has_valid_name_true():
+    """It returns True given a valid string."""
+    row = Row(OrderedDict([('name', 'Apartment Dorr')]))
+    assert row.has_valid_name()

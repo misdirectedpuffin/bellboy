@@ -3,6 +3,24 @@ import csv
 import os
 
 from collections import OrderedDict
+from itertools import product
+from operator import ne
+
+INVALID_CODE_POINTS = (
+    192,
+    193,
+    245,
+    246,
+    247,
+    248,
+    249,
+    250,
+    251,
+    252,
+    253,
+    254,
+    255,
+)
 
 
 class Row(OrderedDict):
@@ -13,6 +31,7 @@ class Row(OrderedDict):
         self._stars = None
         self._uri = None
         self._name = None
+        self._valid = None
 
     def __str__(self):
         return self.row.__str__()
@@ -38,6 +57,17 @@ class Row(OrderedDict):
             self._name = self.row.get('name')
         return self._name
 
+    @property
+    def valid(self):
+        """Property method valid."""
+        if self._valid is None:
+            self._valid = self.is_valid()
+        return self._valid
+
+    @valid.setter
+    def valid(self, value):
+        self._valid = value
+
     def has_valid_uri(self):
         """Ensure the url is valid."""
         return self.uri.startswith('http')
@@ -57,14 +87,14 @@ class Row(OrderedDict):
 
     def has_valid_name(self):
         """Ensure the hotel name is a valid utf-8 string."""
-        try:
-            bytes(self.name, 'utf-8').decode('utf-8', 'strict')
-        except:
-            # logger.warning('Invalid utf-8 hotel name found for {hotel}')
-            print('cannot decode from bytes')
-            return False
-        else:
-            return True
+        return all(ne(*pair) for pair in product(
+            self._make_code_points(),
+            INVALID_CODE_POINTS
+        ))
+
+    def _make_code_points(self):
+        for char in self.name:
+            yield ord(char)
 
     def is_valid(self):
         """Sanitize and validate the row."""
