@@ -38,3 +38,5 @@ nosetests.xml
 .pydevproject
 .pytest_cache
 .eggs
+
+.vscode/
