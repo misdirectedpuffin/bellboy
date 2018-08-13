@@ -56,6 +56,12 @@ The following command reads the csv file and outputs a `hotels.xml` file. The `-
 $ bellboy parse -i ./data/hotels.csv -o hotels -f xml -p -s 200 -x 3
 ```
 
+You can run the cli with default options:
+
+```
+$ bellboy parse
+```
+
 ## Tests
 
 Test are run at the point of installation in the dockerfile. Pylint and coverage report are generated as part of this step.

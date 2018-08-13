@@ -94,6 +94,7 @@ def entrypoint(ctx):
 async def parse(loop, infile, outfile, output_format, ping, http_status, stars):
     """Parse the csv"""
     hotels = load(infile)
+    confirmation = True
 
     if ping:
         confirmation = click.confirm(
