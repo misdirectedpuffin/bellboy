@@ -52,13 +52,12 @@ Usage: bellboy parse [OPTIONS]
   Parse the csv
 
 Options:
-  --ping
-  --write
-  --outfile TEXT
-  --infile TEXT
-  --data-dir PATH
-  --output-format [json|xml]
-  --help                      Show this message and exit.
+  -s, --http-status INTEGER       Only return uris with this http status.
+  -p, --ping                      Make async http requests for validation.
+  -f, --output-format [json|xml]  The desired output format.
+  -o, --outfile TEXT              Output file name (without extension).
+  -i, --infile PATH               The input file.
+  --help                          Show this message and exit.
 ```
 
 #### Example
@@ -66,12 +65,7 @@ Options:
 The following command reads the csv file and outputs a `hotels.xml` file. The `--ping` option specifies that all urls should be requested for a valid response as part of the command.
 
 ```
-$ bellboy parse \
-  -i ./data/hotels.csv \  # input directory
-  -o hotels-fo \          # output file (without extension)
-  -f xml \                # output format
-  -p \                    # whether to ping/get all uris for validation
-  -s 200                  # Filter out non 200 responses.
+$ bellboy parse -i ./data/hotels.csv -o hotels-fo -f xml -p -s 200
 ```
 
 ## Tests
