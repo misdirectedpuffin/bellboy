@@ -39,8 +39,9 @@ Usage: bellboy parse [OPTIONS]
   Parse the csv
 
 Options:
+  -x, --stars INTEGER             Filter by minimum number of stars.
   -s, --http-status INTEGER       Only return uris with this http status.
-  -p, --ping                      Make async http requests for validation.
+  -p, --ping                      Make async http requests for uri validation.
   -f, --output-format [json|xml]  The desired output format.
   -o, --outfile TEXT              Output file name (without extension).
   -i, --infile PATH               The input file.
