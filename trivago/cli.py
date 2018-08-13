@@ -28,7 +28,7 @@ def write(rows, outpath, outfile, output_format):
     if outfile:
         export_handler = factory(output_format)
         export = export_handler(rows)
-        return export.write(outpath)
+        export.write(outpath)
 
 
 def coro(func):

@@ -2,10 +2,9 @@
 import asyncio
 
 import aiohttp
-import click
 
 
-class HttpUriValidator(object):
+class HttpUriValidator:
     """Custom Uri validator."""
 
     def __init__(self, hotels, loop, connector, **options):
@@ -23,7 +22,7 @@ class HttpUriValidator(object):
                 name = hotel['name']
                 uri = hotel['uri']
                 print(f'Ping: {response.status} {name} {uri}')
-        except:
+        except:  # pylint: disable=bare-except
             # Just swallow all exceptions as 500 and move on.
             name = hotel['name']
             hotel['uri_status'] = 500
@@ -33,8 +32,8 @@ class HttpUriValidator(object):
     async def fetch_all(self):
         """Await all uri responses."""
         async with aiohttp.ClientSession(
-            loop=self.loop,
-            connector=self.connector
+                loop=self.loop,
+                connector=self.connector
         ) as session:
             rows = [self.ping(hotel, session) for hotel in self.hotels]
             results = await asyncio.gather(*rows, return_exceptions=True)

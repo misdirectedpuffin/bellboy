@@ -12,7 +12,7 @@ def factory(export_format):
     }.get(export_format)
 
 
-class Export(object):
+class Export:
     """Base Export class"""
 
     def __init__(self, rows):
