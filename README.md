@@ -3,12 +3,12 @@
 ## Installation
 
 ```
-docker build -t trivago . \
+docker build -t bellboy . \
   && docker run \
     --rm \
     -it \
     -v <path/to/repo/trivago/data>:/opt/app/data \
-    trivago \
+    bellboy \
     /bin/bash
 ```
 
@@ -58,6 +58,8 @@ $ bellboy parse -i ./data/hotels.csv -o hotels -f xml -p -s 200 -x 3
 
 ## Tests
 
+Test are run at the point of installation in the dockerfile. Pylint and coverage report are generated as part of this step.
+
 ## Implementation Choices
 
 **UTF-8 validation**
@@ -72,7 +74,18 @@ This means that ordinals 192, 193 and 245-255 would not qualify as valid charact
 
 An uri that is a valid format and does not return a valid http response is possibly not a useful resource. Assuming some user experience related to the uri requires a valid http response, we should call the url and check the response. There are thousands of uri's in the data, so we do this with `asyncio` and `aiohttp`. This will still take a while for all calls to return, but the rubric provided with the challenge suggested performance was not a concern.
 
+**Star Ratings**
+
+if there is an invalid star rating such as -1 or 6 etc, the rating is set to 0.
+
 ### Possible Further Work
 
 - Enable two separate subcommands for the parsing and filtering.
 - Make `HttpUriValidator` subclass a `Validator`, then introduce validation classes for fields or specific funtionality/filtering.
+- Enable cli stars rating to be a band. E.g.
+
+```
+$ bellboy ... -x 3 -x 5  # between 3 and 5 stars
+```
+
+
