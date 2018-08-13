@@ -7,9 +7,9 @@ from functools import update_wrapper
 import aiohttp
 import click
 
-from trivago.export import factory
-from trivago.transform import load, Row
-from trivago.validate import HttpUriValidator
+from bellboy.export import factory
+from bellboy.transform import load, Row
+from bellboy.validate import HttpUriValidator
 
 
 # pylint: disable=unused-argument
