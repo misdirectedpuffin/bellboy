@@ -61,7 +61,7 @@ def entrypoint(ctx):
     '--ping',
     is_flag=True,
     default=False,
-    help='Make async http requests for validation.'
+    help='Make async http requests for uri validation.'
 )
 @click.option(
     '-f',
