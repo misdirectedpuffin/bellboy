@@ -1,7 +1,7 @@
 """Tests related to the cli entrypont."""
 
 from click.testing import CliRunner
-from trivago.cli import entrypoint
+from bellboy.cli import entrypoint
 
 
 def test_cli_output():

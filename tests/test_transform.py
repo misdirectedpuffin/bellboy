@@ -4,7 +4,7 @@ from collections import OrderedDict
 
 import pytest
 
-from trivago.transform import Row, load
+from bellboy.transform import Row, load
 
 
 def test_load(tmpdir):

@@ -1,7 +1,7 @@
 """Unit tests related to export."""
 from lxml import etree
 
-from trivago.export import XmlExport, JsonExport
+from bellboy.export import XmlExport, JsonExport
 
 
 # pylint: disable=no-self-use

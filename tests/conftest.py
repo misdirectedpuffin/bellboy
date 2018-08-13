@@ -4,7 +4,7 @@ from collections import OrderedDict
 import pytest
 from lxml import etree
 
-from trivago.transform import Row
+from bellboy.transform import Row
 
 
 @pytest.fixture(scope='module')

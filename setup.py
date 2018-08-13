@@ -14,7 +14,7 @@ def get_requirements(file):
 
 
 setup(
-    name="trivago",
+    name="bellboy",
     version="0.1.0",
     author="Steven Carey",
     author_email="misdirectedpuffin@gmail.com",
@@ -22,7 +22,7 @@ setup(
     packages=find_packages(),
     entry_points={
         'console_scripts': [
-            'bellboy=trivago.cli:entrypoint',
+            'bellboy=bellboy.cli:entrypoint',
         ],
     },
     install_requires=get_requirements('requirements.txt'),
@@ -32,5 +32,5 @@ setup(
         'Programming Language :: Python :: 3.5',
     ],
     zip_safe=False,
-    keywords='trivago, bellboy'
+    keywords='bellboy, bellboy'
 )
