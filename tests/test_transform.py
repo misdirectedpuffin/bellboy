@@ -52,10 +52,10 @@ def test_has_valid_rating(mock_row, expected):
 
 
 @pytest.mark.parametrize('mock_row, expected', [
-    (Row(OrderedDict([('stars', '0')])), '0'),
-    (Row(OrderedDict([('stars', '-1')])), '0'),
-    (Row(OrderedDict([('stars', '6')])), '0'),
-    (Row(OrderedDict([('stars', '-0')])), '0'),
+    (Row(OrderedDict([('stars', '0')])), 0),
+    (Row(OrderedDict([('stars', '-1')])), 0),
+    (Row(OrderedDict([('stars', '6')])), 0),
+    (Row(OrderedDict([('stars', '-0')])), 0),
 ])
 def test_normalise_stars(mock_row, expected):
     """It returns a normalised star rating given a row."""

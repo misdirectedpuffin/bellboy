@@ -51,6 +51,12 @@ def entrypoint(ctx):
 # pylint: disable=too-many-arguments
 @entrypoint.command()
 @click.option(
+    '-x',
+    '--stars',
+    default=0,
+    help='Filter by minimum number of stars.'
+)
+@click.option(
     '-s',
     '--http-status',
     default=200,
@@ -85,7 +91,7 @@ def entrypoint(ctx):
 )
 @coro
 @click.pass_obj
-async def parse(loop, infile, outfile, output_format, ping, http_status):
+async def parse(loop, infile, outfile, output_format, ping, http_status, stars):
     """Parse the csv"""
     hotels = load(infile)
 
@@ -110,7 +116,8 @@ async def parse(loop, infile, outfile, output_format, ping, http_status):
     hotels = (Row(hotel) for hotel in hotels)
     valid = (hotel for hotel in hotels if all([
         hotel.has_valid_name(),
-        hotel.uri_status == http_status
+        hotel.uri_status == http_status,
+        hotel.normalise_stars() >= stars
     ]))
     write(valid, outpath, outfile, output_format)
     click.echo(f'Your data is available at: {outpath}')

@@ -39,8 +39,8 @@ class Row(OrderedDict):
     def stars(self):
         """Property method stars."""
         if self._stars is None:
-            self._stars = self.row.get('stars', str(0))
-        return self._stars
+            self._stars = self.row.get('stars', 0)
+        return int(self._stars)
 
     @property
     def uri(self):
@@ -57,18 +57,6 @@ class Row(OrderedDict):
         return self._name
 
     @property
-    def valid_uri_format(self):
-        """Property method valid."""
-        if self._valid_uri_format is None:
-            self._valid_uri_format = self.has_valid_uri_format()
-        return self._valid_uri_format
-
-    @valid_uri_format.setter
-    def valid_uri_format(self, value):
-        self._valid_uri_format = value
-        self.row['valid_uri_format'] = value
-
-    @property
     def uri_status(self):
         """Property method valid."""
         if self._uri_status is None:
@@ -80,19 +68,6 @@ class Row(OrderedDict):
         # self._uri_status = value
         self.row['uri_status'] = str(value)
 
-    def has_valid_uri_format(self):
-        """Ensure the url is valid format."""
-        regex = re.compile(
-            r'^(?:http|ftp)s?://'  # http:// or https://
-            # domain...
-            r'(?:(?:[A-Z0-9](?:[A-Z0-9-]{0,61}[A-Z0-9])?\.)+'
-            r'(?:[A-Z]{2,6}\.?|[A-Z0-9-]{2,}\.?)|'
-            r'localhost|'  # localhost...
-            r'\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})'  # ...or ip
-            r'(?::\d+)?'  # optional port
-            r'(?:/?|[/?]\S+)$', re.IGNORECASE)
-        return re.match(regex, self.uri)
-
     def has_valid_rating(self):
         """Ensure the row has a valid star rating."""
         return all([
@@ -103,8 +78,8 @@ class Row(OrderedDict):
     def normalise_stars(self):
         """Get the existing rating or normalise it."""
         if self.has_valid_rating():
-            return str(abs(int(self.stars)))
-        return str(0)
+            return abs(int(self.stars))
+        return 0
 
     def has_valid_name(self):
         """Ensure the hotel name is a valid utf-8 string."""
@@ -116,13 +91,6 @@ class Row(OrderedDict):
     def _make_code_points(self):
         for char in self.name:
             yield ord(char)
-
-    def is_valid(self):
-        """Sanitize and validate the row."""
-        return all([
-            self.has_valid_name(),
-            self.has_valid_uri_format()
-        ])
 
 
 def load(path, delimiter=','):
