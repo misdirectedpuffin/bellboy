@@ -78,7 +78,7 @@ An uri that is a valid format and does not return a valid http response is possi
 
 if there is an invalid star rating such as -1 or 6 etc, the rating is set to 0.
 
-### Possible Further Work
+## Possible Further Work
 
 - Enable two separate subcommands for the parsing and filtering.
 - Make `HttpUriValidator` subclass a `Validator`, then introduce validation classes for fields or specific funtionality/filtering.
@@ -87,5 +87,6 @@ if there is an invalid star rating such as -1 or 6 etc, the rating is set to 0.
 ```
 $ bellboy ... -x 3 -x 5  # between 3 and 5 stars
 ```
+- Enable pre-request uri filtering based on uri format validation. This would most likely be based on [Django url valiator regex](https://docs.djangoproject.com/en/2.1/_modules/django/core/validators/#URLValidator)
 
 
