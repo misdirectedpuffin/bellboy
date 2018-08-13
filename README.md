@@ -2,19 +2,6 @@
 
 ## Installation
 
-With python:3.7
-
-```
-$ pip install ./trivago/
-```
-or
-
-```
-$ python setup.py install
-```
-
-#### Using the Dockerfile
-
 ```
 docker build -t trivago . \
   && docker run \
@@ -65,7 +52,7 @@ Options:
 The following command reads the csv file and outputs a `hotels.xml` file. The `--ping` option specifies that all urls should be requested for a valid response as part of the command.
 
 ```
-$ bellboy parse -i ./data/hotels.csv -o hotels-fo -f xml -p -s 200
+$ bellboy parse -i ./data/hotels.csv -o hotels -f xml -p -s 200 -x 3
 ```
 
 ## Tests
