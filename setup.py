@@ -25,7 +25,10 @@ setup(
             'bellboy=trivago.cli:entrypoint',
         ],
     },
-    install_requires=get_requirements('requirements.txt'),
+    install_requires=[
+        'pytest-runner',
+        get_requirements('requirements.txt')
+    ],
     tests_require=get_requirements('requirements_test.txt'),
     setup_requires=['pytest-runner'],
     classifiers=[
