@@ -1,6 +1,5 @@
 """Functions and classes related to the parsing of hotel.csv"""
 import csv
-import re
 
 from collections import OrderedDict
 from itertools import product
