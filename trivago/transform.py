@@ -1,6 +1,6 @@
 """Functions and classes related to the parsing of hotel.csv"""
 import csv
-import os
+import re
 
 from collections import OrderedDict
 from itertools import product
@@ -24,17 +24,16 @@ INVALID_CODE_POINTS = (
 
 
 class Row(OrderedDict):
+    """Custom OrderedDict."""
 
     def __init__(self, *args, **kwargs):
-        super(Row, self).__init__(*args, **kwargs)
         self.row = args[0]
         self._stars = None
         self._uri = None
         self._name = None
-        self._valid = None
-
-    def __str__(self):
-        return self.row.__str__()
+        self._valid_uri_format = None
+        self._uri_status = None
+        super(Row, self).__init__(*args, **kwargs)
 
     @property
     def stars(self):
@@ -58,19 +57,41 @@ class Row(OrderedDict):
         return self._name
 
     @property
-    def valid(self):
+    def valid_uri_format(self):
         """Property method valid."""
-        if self._valid is None:
-            self._valid = self.is_valid()
-        return self._valid
+        if self._valid_uri_format is None:
+            self._valid_uri_format = self.has_valid_uri_format()
+        return self._valid_uri_format
 
-    @valid.setter
-    def valid(self, value):
-        self._valid = value
+    @valid_uri_format.setter
+    def valid_uri_format(self, value):
+        self._valid_uri_format = value
+        self.row['valid_uri_format'] = value
 
-    def has_valid_uri(self):
-        """Ensure the url is valid."""
-        return self.uri.startswith('http')
+    @property
+    def uri_status(self):
+        """Property method valid."""
+        if self._uri_status is None:
+            self._uri_status = self.row.get('uri_status')
+        return self._uri_status
+
+    @uri_status.setter
+    def uri_status(self, value):
+        # self._uri_status = value
+        self.row['uri_status'] = str(value)
+
+    def has_valid_uri_format(self):
+        """Ensure the url is valid format."""
+        regex = re.compile(
+            r'^(?:http|ftp)s?://'  # http:// or https://
+            # domain...
+            r'(?:(?:[A-Z0-9](?:[A-Z0-9-]{0,61}[A-Z0-9])?\.)+'
+            r'(?:[A-Z]{2,6}\.?|[A-Z0-9-]{2,}\.?)|'
+            r'localhost|'  # localhost...
+            r'\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})'  # ...or ip
+            r'(?::\d+)?'  # optional port
+            r'(?:/?|[/?]\S+)$', re.IGNORECASE)
+        return re.match(regex, self.uri)
 
     def has_valid_rating(self):
         """Ensure the row has a valid star rating."""
@@ -100,7 +121,7 @@ class Row(OrderedDict):
         """Sanitize and validate the row."""
         return all([
             self.has_valid_name(),
-            self.has_valid_uri()
+            self.has_valid_uri_format()
         ])
 
 
@@ -112,4 +133,4 @@ def load(path, delimiter=','):
             delimiter=delimiter
         )
         for row in reader:
-            yield Row(row)
+            yield row

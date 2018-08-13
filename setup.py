@@ -22,7 +22,7 @@ setup(
     packages=find_packages(),
     entry_points={
         'console_scripts': [
-            'transformer=trivago.cli:entrypoint',
+            'bellboy=trivago.cli:entrypoint',
         ],
     },
     install_requires=get_requirements('requirements.txt'),
@@ -32,5 +32,5 @@ setup(
         'Programming Language :: Python :: 3.5',
     ],
     zip_safe=False,
-    keywords='trivago, transformer'
+    keywords='trivago, bellboy'
 )

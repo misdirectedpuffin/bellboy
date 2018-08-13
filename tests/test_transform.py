@@ -73,7 +73,7 @@ def test_normalise_stars(mock_row, expected):
     (
         Row(OrderedDict([
             ('name', 'somehotel'),
-            ('uri', 'ftp://in.hotel.com/')
+            ('uri', 'ftpp://in.hotel/')
         ])),
         False
     )
@@ -83,6 +83,7 @@ def test_is_valid_row(mock_row, expected):
     assert mock_row.is_valid() == expected
 
 
+# pylint: disable=protected-access
 def test_make_code_points():
     """It returns the expected ord value of a character."""
     row = Row(OrderedDict([('name', 'test-name')]))
@@ -101,3 +102,15 @@ def test_has_valid_name_true():
     """It returns True given a valid string."""
     row = Row(OrderedDict([('name', 'Apartment Dorr')]))
     assert row.has_valid_name()
+
+
+def test_has_valid_uri_format_true():
+    """It returns the expected bool given an uri."""
+    row = Row(OrderedDict([('uri', 'https://news.ycombinator.com/')]))
+    assert row.has_valid_uri_format()
+
+
+def test_has_valid_uri_format_false():
+    """It returns the expected bool given an uri."""
+    row = Row(OrderedDict([('uri', 'news.ycombinator.com/')]))
+    assert not row.has_valid_uri_format()

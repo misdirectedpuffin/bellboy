@@ -6,6 +6,7 @@ import click
 
 
 class HttpUriValidator(object):
+    """Custom Uri validator."""
 
     def __init__(self, hotels, loop, connector, **options):
         self.hotels = hotels
@@ -14,16 +15,20 @@ class HttpUriValidator(object):
         self.options = options
 
     async def ping(self, hotel, session):
+        """Make a get reques to a given hotel uri."""
         try:
-            async with session.get(hotel.uri) as response:
-                jsn = await response.json()
-                hotel.valid = None
-        except asyncio.TimeoutError:
-            hotel.valid = False
-        finally:
-            print(f'Ping: {response.status} {hotel.name} {hotel.uri}')
-            hotel.valid = True if response.status == 200 else False
-            return hotel
+            async with session.get(hotel['uri'], allow_redirects=False) as response:
+                _ = await response.text()
+                hotel['uri_status'] = response.status
+                name = hotel['name']
+                uri = hotel['uri']
+                print(f'Ping: {response.status} {name} {uri}')
+        except:
+            # Just swallow all exceptions as 500 and move on.
+            name = hotel['name']
+            hotel['uri_status'] = 500
+            print(f'Ping: Hotel website exception handled for {name}')
+        return hotel
 
     async def fetch_all(self):
         """Await all uri responses."""
@@ -33,9 +38,4 @@ class HttpUriValidator(object):
         ) as session:
             rows = [self.ping(hotel, session) for hotel in self.hotels]
             results = await asyncio.gather(*rows, return_exceptions=True)
-            click.echo('\nAll results collected...')
         return results
-
-    async def hotel_data(self):
-        """Ping all uri's within a non-blocking event loop."""
-        return self.loop.run_until_complete(self.fetch_all())

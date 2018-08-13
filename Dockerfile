@@ -7,6 +7,6 @@ ADD ./requirements.txt ./requirements_test.txt /opt/app/
 RUN pip install -r requirements.txt -r requirements_test.txt
 
 RUN mkdir /opt/log
-# Add opt/app on build.
+VOLUME [ "/opt/app/data" ]
 ADD . /opt/app
-RUN cd .. && pip install ./app/
+RUN python setup.py install
