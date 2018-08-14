@@ -13,7 +13,7 @@ def factory(export_format):
     }.get(export_format)
 
 
-class Export:  # pytest: disable=too-few-public-methods
+class Export:  # pylint: disable=too-few-public-methods
     """Base Export class"""
     __metaclass__ = abc.ABCMeta
 
@@ -25,7 +25,7 @@ class Export:  # pytest: disable=too-few-public-methods
         """Abstract method write."""
 
 
-class JsonExport(Export):  # pytest: disable=too-few-public-methods
+class JsonExport(Export):  # pylint: disable=too-few-public-methods
     """Json export handler."""
 
     def __init__(self, rows):
