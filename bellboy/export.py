@@ -1,4 +1,5 @@
 """Classes related to data export format."""
+import abc
 import json
 
 from lxml import etree
@@ -12,22 +13,19 @@ def factory(export_format):
     }.get(export_format)
 
 
-class Export:
+class Export:  # pytest: disable=too-few-public-methods
     """Base Export class"""
+    __metaclass__ = abc.ABCMeta
 
     def __init__(self, rows):
         self.rows = rows
 
+    @abc.abstractmethod
     def write(self, path):
         """Abstract method write."""
-        raise NotImplementedError
-
-    def get_document(self):
-        """Abstract method get_document."""
-        raise NotImplementedError
 
 
-class JsonExport(Export):
+class JsonExport(Export):  # pytest: disable=too-few-public-methods
     """Json export handler."""
 
     def __init__(self, rows):
@@ -44,15 +42,6 @@ class JsonExport(Export):
                 sort_keys=True,
                 indent=4
             )
-
-    def get_document(self):
-        """Make a json string from the valid row data."""
-        return json.dumps(
-            list(self.rows),
-            ensure_ascii=False,
-            sort_keys=True,
-            indent=4
-        )
 
 
 class XmlExport(Export):
