@@ -39,6 +39,7 @@ Usage: bellboy parse [OPTIONS]
   Parse the csv
 
 Options:
+  --sort TEXT...                  Sort by list of options.
   -x, --stars INTEGER             Filter by minimum number of stars.
   -s, --http-status INTEGER       Only return uris with this http status.
   -p, --ping                      Make async http requests for uri validation.
@@ -53,7 +54,7 @@ Options:
 The following command reads the csv file and outputs a `hotels.xml` file. The `--ping` option specifies that all urls should be requested for a valid response as part of the command.
 
 ```
-$ bellboy parse -i ./data/hotels.csv -o hotels -f xml -p -s 200 -x 3
+$ bellboy parse -i ./data/hotels.csv -o hotels -f xml -p -s 200 -x 3 --sort name stars
 ```
 
 You can run the cli with default options:

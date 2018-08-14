@@ -3,12 +3,13 @@ import asyncio
 import os
 import sys
 from functools import update_wrapper
+from operator import itemgetter
 
 import aiohttp
 import click
 
 from bellboy.export import factory
-from bellboy.transform import load, Row
+from bellboy.transform import Row, load
 from bellboy.validate import HttpUriValidator
 
 
@@ -48,8 +49,15 @@ def entrypoint(ctx):
     """Entrypoint to CLI."""
     ctx.obj = asyncio.get_event_loop()
 
-# pylint: disable=too-many-arguments
+# pylint: disable=too-many-arguments,too-many-locals
 @entrypoint.command()
+@click.option(
+    '--sort',
+    default=['name'],
+    nargs=2,
+    type=str,
+    help='Sort by list of options.'
+)
 @click.option(
     '-x',
     '--stars',
@@ -91,7 +99,16 @@ def entrypoint(ctx):
 )
 @coro
 @click.pass_obj
-async def parse(loop, infile, outfile, output_format, ping, http_status, stars):
+async def parse(
+        loop,
+        infile,
+        outfile,
+        output_format,
+        ping,
+        http_status,
+        stars,
+        sort
+):
     """Parse the csv"""
     hotels = load(infile)
     confirmation = True
@@ -120,7 +137,8 @@ async def parse(loop, infile, outfile, output_format, ping, http_status, stars):
         hotel.uri_status == http_status,
         hotel.normalise_stars() >= stars
     ]))
-    write(valid, outpath, outfile, output_format)
+    sorted_valid = sorted(valid, key=itemgetter(*sort))
+    write(sorted_valid, outpath, outfile, output_format)
     click.echo(f'Your data is available at: {outpath}')
 
 
